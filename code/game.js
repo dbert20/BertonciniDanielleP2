@@ -40,11 +40,11 @@ function Level(plan) {
       // Because there is a third case (space ' '), use an "else if" instead of "else"
       else if (ch == "!")
         fieldType = "lava";
-	  			else if (ch == "*")
+	  else if (ch == "*")
         fieldType = "snow";
-						else if (ch == "-") 
-								fieldType = "turtle";
-						
+	  else if (ch == "-")
+		fieldType = "turtle";
+
 
       // "Push" the fieldType, which is a string, onto the gridLine array (at the end).
       gridLine.push(fieldType);
@@ -148,7 +148,7 @@ function Turtle(pos, ch) {
 Turtle.prototype.type = "turtle";
 
 
-// Helper function to easily create an element of a type provided 
+// Helper function to easily create an element of a type provided
 function elt(name, className) {
   var elt = document.createElement(name);
   if (className) elt.className = className;
@@ -157,9 +157,10 @@ function elt(name, className) {
 
 // Main display class. We keep track of the scroll window using it.
 function DOMDisplay(parent, level) {
+    var gameContainer = document.getElementsByClassName('game-container');
 
 // this.wrap corresponds to a div created with class of "game"
-  this.wrap = parent.appendChild(elt("div", "game"));
+  this.wrap = gameContainer[0].appendChild(elt("div", "game"));
   this.level = level;
 
   // In this version, we only have a static background.
@@ -190,15 +191,14 @@ DOMDisplay.prototype.drawBackground = function() {
   return table;
 };
 
-// All actors are above (in front of) background elements.  
+// All actors are above (in front of) background elements.
 DOMDisplay.prototype.drawActors = function() {
   // Create a new container div for actor dom elements
   var wrap = elt("div");
 
   // Create a new element for each actor each frame
   this.level.actors.forEach(function(actor) {
-    var rect = wrap.appendChild(elt("div",
-                                    "actor " + actor.type));
+    var rect = wrap.appendChild(elt("div","actor " + actor.type));
     rect.style.width = actor.size.x * scale + "px";
     rect.style.height = actor.size.y * scale + "px";
     rect.style.left = actor.pos.x * scale + "px";
@@ -275,10 +275,10 @@ Level.prototype.obstacleAt = function(pos, size) {
   }
 };
 
-// Collision detection for actors is handled separately from 
-// tiles. 
+// Collision detection for actors is handled separately from
+// tiles.
 Level.prototype.actorAt = function(actor) {
-  // Loop over each actor in our actors list and compare the 
+  // Loop over each actor in our actors list and compare the
   // boundary boxes for overlaps.
   for (var i = 0; i < this.actors.length; i++) {
     var other = this.actors[i];
@@ -291,7 +291,7 @@ Level.prototype.actorAt = function(actor) {
       // check if the boundaries overlap by comparing all sides for
       // overlap and return the other actor if found
       return other;
-  } 
+  }
 };
 
 // Update simulation each step based on keys & step size
@@ -300,7 +300,7 @@ Level.prototype.animate = function(step, keys) {
   if (this.status != null)
     this.finishDelay -= step;
 
-  // Ensure each is maximum 100 milliseconds 
+  // Ensure each is maximum 100 milliseconds
   while (step > 0) {
     var thisStep = Math.min(step, maxStep);
     this.actors.forEach(function(actor) {
@@ -396,7 +396,7 @@ Player.prototype.moveY = function(step, level, keys) {
   var motion = new Vector(0, this.speed.y * step);
   var newPos = this.pos.plus(motion);
   var obstacle = level.obstacleAt(newPos, this.size);
-  // The floor is also an obstacle -- only allow players to 
+  // The floor is also an obstacle -- only allow players to
   // jump if they are touching some obstacle.
   if (obstacle) {
     level.playerTouched(obstacle);
@@ -446,15 +446,15 @@ Level.prototype.playerTouched = function(type, actor) {
 };
 
 // Arrow key codes for readibility
-var arrowCodes = {37: "left", 38: "up", 39: "right"};
+var arrowCodes = {37: "left", 32: "up", 39: "right"};
 
 // Translate the codes pressed from a key event
 function trackKeys(codes) {
   var pressed = Object.create(null);
 
-  // alters the current "pressed" array which is returned from this function. 
+  // alters the current "pressed" array which is returned from this function.
   // The "pressed" variable persists even after this function terminates
-  // That is why we needed to assign it using "Object.create()" as 
+  // That is why we needed to assign it using "Object.create()" as
   // otherwise it would be garbage collected
 
   function handler(event) {
@@ -462,7 +462,7 @@ function trackKeys(codes) {
       // If the event is keydown, set down to true. Else set to false.
       var down = event.type == "keydown";
       pressed[codes[event.keyCode]] = down;
-      // We don't want the key press to scroll the browser window, 
+      // We don't want the key press to scroll the browser window,
       // This stops the event from continuing to be processed
       event.preventDefault();
     }
